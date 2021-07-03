@@ -32,7 +32,7 @@ const loadInitialTaskCards = () => {
 
     //map around the array to generate HTML card and inject it to DOM
     cards.map((cardObject) => {
-        const createNewCard = newCard(card);
+        const createNewCard = newCard(cardObject);
         taskContainer.insertAdjacentHTML("beforeend", createNewCard);
         globalStore.push(cardObject);
     });
@@ -55,6 +55,6 @@ const saveChanges = () => {
 
     //add to local storage
     localStorage.setItem("tasky", JSON.stringify({ cards: globalStore }));
-    //cant direclty send array as argument so sent object
+    //cant directly send array as argument so sent object
 
 };
