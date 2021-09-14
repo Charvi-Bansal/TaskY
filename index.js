@@ -1,5 +1,6 @@
 //parent element to store cards
 const taskContainer = document.querySelector(".task_container");
+const taskModal= document.querySelector(".task_modal_body");
 
 //global store
 let globalStore = [];
@@ -17,10 +18,36 @@ const newCard = ({ id, imageUrl, taskTitle, taskType, taskDescription }) => `<di
         <span class="badge bg-primary ">${taskType}</span>
     </div>
     <div class="card-footer text-muted ">
-        <button type="button " id=${id} class="btn btn-outline-primary float-end ">Open Task</button>
+        <button type="button " id=${id} onclick="openTask.apply(this,arguments)" class="btn btn-outline-primary float-end " data-bs-toggle="modal" data-bs-target="#exampleModal2">Open Task</button>
     </div>
 </div>
 </div>`;
+
+
+
+const htmlModalContent = ({ id, imageUrl, taskTitle, taskType, taskDescription }) => {
+    const date = new Date(parseInt(id));
+    return ` <div id=${id}>
+    <img src=${imageUrl} class="card-img-top " alt="Image ">
+    
+    <strong class="text-sm text-muted">Created on ${date.toDateString()}</strong>
+    <h2 class="my-3">${taskTitle}</h2>
+    <p class="lead">
+    ${taskDescription}
+    </p>
+    <span class="badge bg-primary ">${taskType}</span>
+    </div>`;
+  };
+
+  const openTask = (event) => {
+      if(!event)
+      event=window.event;
+
+      const getTask = globalStore.filter(({id}) => id === event.target.id);  
+      taskModal.innerHTML = htmlModalContent(getTask[0]);
+
+  };
+  
 
 const loadInitialTaskCards = () => {
     //access local storage
@@ -111,6 +138,8 @@ const editCard = (event)=>{
     taskDescription.setAttribute("contenteditable","true"); 
     taskType.setAttribute("contenteditable","true");
     submitButton.setAttribute("onclick","saveEditChanges.apply(this,arguments)");
+    submitButton.removeAttribute("data-bs-toggle");
+    submitButton.removeAttribute("data-bs-target");
     submitButton.innerHTML="Save Changes";
 };
 const saveEditChanges = (event)=>{
